@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:yoruba_clarity/configs/color_palette.dart';
 
 class YCAppBar extends StatelessWidget implements PreferredSizeWidget {
   const YCAppBar({super.key, required this.headerText});
@@ -12,7 +13,7 @@ class YCAppBar extends StatelessWidget implements PreferredSizeWidget {
         style: Theme.of(context).textTheme.bodySmall!.copyWith(
               fontSize: 10,
               fontWeight: FontWeight.bold,
-              color: kWhite,
+              color: ColorPalette.kWhite,
             ),
       ),
       centerTitle: true,
