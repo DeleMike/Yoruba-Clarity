@@ -2,6 +2,8 @@
 class AssetsImages {
   // ----------------- onboarding ----------------------------
   static const appSplashImage = 'assets/images/flash_card.png';
+  static const botImage = 'assets/images/bot.png';
+  static const userImage = 'assets/images/user.png';
 }
 
 /// Assets Animations

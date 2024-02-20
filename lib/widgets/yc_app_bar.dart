@@ -3,10 +3,15 @@ import 'package:go_router/go_router.dart';
 import 'package:yoruba_clarity/configs/color_palette.dart';
 
 class YCAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const YCAppBar(
-      {super.key, required this.headerText, required this.needsABackButton});
+  const YCAppBar({
+    super.key,
+    required this.headerText,
+    required this.needsABackButton,
+    this.handleBackButtonPress,
+  });
   final String headerText;
   final bool needsABackButton;
+  final void Function()? handleBackButtonPress;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +46,8 @@ class YCAppBar extends StatelessWidget implements PreferredSizeWidget {
               leading: needsABackButton
                   ? IconButton(
                       // perform normal back button press if there is no custom function given
-                      onPressed: () => context.pop(), //Navigator.pop(context),
+                      onPressed: handleBackButtonPress ??
+                          () => context.pop(), //Navigator.pop(context),
                       icon: const Icon(
                         Icons.arrow_back_ios_new,
                         color: ColorPalette.kWhite,

@@ -1,7 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:yoruba_clarity/core/dashboard/diacritize/screens/add_diacritics.dart';
 import 'package:yoruba_clarity/core/dashboard/home_screen.dart';
+import 'package:yoruba_clarity/core/dashboard/result/screens/result_screen.dart';
 import 'package:yoruba_clarity/core/onboarding/onboarding.dart';
 
 import '../core/init_screen.dart';
@@ -15,6 +17,10 @@ class AppRouter {
   static const onboardingScreen = '/onboarding';
 
   static const homeScreen = '/home';
+
+  static const addDiacriticsScreen = '/add-diacritics';
+
+  static const resultScreen = '/result-screen';
 
   static final router = GoRouter(
     navigatorKey: navigatorKey,
@@ -48,6 +54,26 @@ class AppRouter {
           context: context,
           state: state,
           child: const HomeScreen(),
+        ),
+      ),
+      GoRoute(
+        path: addDiacriticsScreen,
+        builder: (BuildContext context, GoRouterState state) =>
+            const AddDiacritics(),
+        pageBuilder: (context, state) => buildPageWithDefaultTransition<void>(
+          context: context,
+          state: state,
+          child: const AddDiacritics(),
+        ),
+      ),
+      GoRoute(
+        path: resultScreen,
+        builder: (BuildContext context, GoRouterState state) =>
+            const ResultScreen(),
+        pageBuilder: (context, state) => buildPageWithDefaultTransition<void>(
+          context: context,
+          state: state,
+          child: const ResultScreen(),
         ),
       ),
     ],

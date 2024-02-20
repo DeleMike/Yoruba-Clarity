@@ -32,7 +32,7 @@ class _InitScreenState extends State<InitScreen> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(body: LoadingScreen());
         }
-        return const OnboardingScreen();
+        return const HomeScreen();
       },
     );
   }

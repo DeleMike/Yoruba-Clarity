@@ -7,6 +7,7 @@ class ColorPalette {
   static const Color kCanvasColor = Color(0xFFF5F7FB);
   static const Color kLightBlack = Colors.black26;
   static const Color kPrimaryColor = Color(0xFF17253D);
+  static const Color kBorderGrey = Color(0xFFCBD5E1);
   static const Color kLightPrimaryColor = Color(0xFFD9DFEF);
   static const Color kVeryLightBlueColor = Color(0xFFA4AEC4);
   static const Color kLightBlueColor = Color(0xFF7281A0);
