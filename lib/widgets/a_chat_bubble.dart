@@ -73,7 +73,7 @@ class ChatBubble extends StatelessWidget {
                         : Theme.of(context)
                             .textTheme
                             .bodyMedium!
-                            .copyWith(color: ColorPalette.kWhite),
+                            .copyWith(color: ColorPalette.kWhite, fontSize: 18),
                     scrollPhysics: const ClampingScrollPhysics(),
                   ),
                 ),

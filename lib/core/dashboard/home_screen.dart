@@ -8,11 +8,19 @@ import 'package:yoruba_clarity/widgets/yc_app_bar.dart';
 import '../../configs/app_router.dart';
 import '../../configs/dimensions.dart';
 
-final texts = [
-  'Nàíjíríà',
-  'mo fẹ́ jẹun',
-  'Lẹ́yìn náà ni ó kọjú sí Labake padà Lẹ́yìn náà ni ó kọjú sí Labake padà Lẹ́yìn náà ni ó kọjú sí Labake padà...'
-];
+// final texts = [
+//   'Nàíjíríà',
+//   'mo fẹ́ jẹun',
+//   'Lẹ́yìn náà ni ó kọjú sí Labake padà Lẹ́yìn náà ni ó kọjú sí Labake padà Lẹ́yìn náà ni ó kọjú sí Labake padà...',
+//   'Nàíjíríà',
+//   'mo fẹ́ jẹun',
+//   'Lẹ́yìn náà ni ó kọjú sí Labake padà Lẹ́yìn náà ni ó kọjú sí Labake padà Lẹ́yìn náà ni ó kọjú sí Labake padà...',
+//   'Nàíjíríà',
+//   'mo fẹ́ jẹun',
+//   'Lẹ́yìn náà ni ó kọjú sí Labake padà Lẹ́yìn náà ni ó kọjú sí Labake padà Lẹ́yìn náà ni ó kọjú sí Labake padà...'
+// ];
+
+final texts = ['mo fẹ́ jẹun'];
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -20,28 +28,32 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:
-          const YCAppBar(headerText: 'Yorùbá Clarity', needsABackButton: false),
-      body: Padding(
-        padding: const EdgeInsets.only(
-            left: kPaddingM, top: kPaddingM, right: kPaddingM),
-        child: GridView.builder(
-          itemCount: texts.length,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-          ),
-          itemBuilder: (ctx, index) {
-            // ignore: avoid_print
-            return InkWell(
-              onTap: (() => print('Position ${texts[index]} clicked')),
-              child: _AText(name: texts[index]),
-            );
-          },
-          primary: false,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-        ),
-      ),
+      appBar: const YCAppBar(
+          headerText: 'Your Saved Cards', needsABackButton: false),
+      body: texts.isEmpty
+          ? const Center(
+              child: Text('No cards saved yet'),
+            )
+          : Padding(
+              padding: const EdgeInsets.only(
+                  left: kPaddingM, top: kPaddingM, right: kPaddingM),
+              child: GridView.builder(
+                itemCount: texts.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                ),
+                itemBuilder: (ctx, index) {
+                  // ignore: avoid_print
+                  return InkWell(
+                    onTap: (() => print('Position ${texts[index]} clicked')),
+                    child: _AText(name: texts[index]),
+                  );
+                },
+                // primary: false,
+                // shrinkWrap: true,
+                // physics: const NeverScrollableScrollPhysics(),
+              ),
+            ),
       //  const Center(
       //   child: Text('No diacritized Yorùbá text yet'),
       // ),
@@ -73,7 +85,7 @@ class _AText extends StatelessWidget {
       padding: const EdgeInsets.all(12.0),
       decoration: BoxDecoration(
         color: ColorPalette.kWhite,
-        border: Border.all(width: 0.6, color: ColorPalette.kBorderGrey),
+        border: Border.all(width: 5, color: ColorPalette.kBorderGrey),
         borderRadius: const BorderRadius.all(
           Radius.circular(kSmallRadius),
         ),
@@ -86,6 +98,9 @@ class _AText extends StatelessWidget {
           Flexible(
             child: Text(
               name,
+              softWrap: true,
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,

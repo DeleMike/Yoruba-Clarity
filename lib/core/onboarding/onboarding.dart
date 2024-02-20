@@ -58,21 +58,22 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             //second page
             _View(
               animPath: AssetsAnimations.secondAnim,
-              viewName: 'Ami Ohun.',
-              tagLine: 'Diacritize Yorùbá words.',
+              viewName: 'Àmì Ohùn.',
+              tagLine:
+                  'Diacritics are tonal marks that can serve as semantic distinguishers.',
             ),
 
             //third page
             _View(
               animPath: AssetsAnimations.thirdAnim,
-              viewName: 'Sho gbo.',
-              tagLine: 'Listen to diacritized words.',
+              viewName: 'Ṣè o gbọ́.',
+              tagLine: 'Listen to audio pronunciations.',
             ),
 
             //fourth page
             _View(
               animPath: AssetsAnimations.fourthAnim,
-              viewName: 'Mo iwe.',
+              viewName: 'Mọ íwé.',
               tagLine: 'Save, Learn and Repeat.',
             ),
           ],
@@ -96,22 +97,22 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   activeDotColor: ColorPalette.kPrimaryColor,
                 ),
               ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: ColorPalette.kPrimaryColor,
-                    shape: const CircleBorder(),
-                  ),
-                  onPressed: () {
-                    isLast
-                        ? context.go(AppRouter.homeScreen)
-                        : _navigateOnboardingExperience();
-                  },
-                  child: Center(
-                      child: Icon(
-                    isLast ? Icons.done : Icons.arrow_forward,
-                    color: ColorPalette.kWhite,
-                  )),
-                )
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: ColorPalette.kPrimaryColor,
+                  shape: const CircleBorder(),
+                ),
+                onPressed: () {
+                  isLast
+                      ? context.go(AppRouter.homeScreen)
+                      : _navigateOnboardingExperience();
+                },
+                child: Center(
+                    child: Icon(
+                  isLast ? Icons.done : Icons.arrow_forward,
+                  color: ColorPalette.kWhite,
+                )),
+              )
             ],
           ),
         ),
