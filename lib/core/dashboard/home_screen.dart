@@ -8,14 +8,14 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const YCAppBar(headerText: 'Home'),
+      appBar: const YCAppBar(headerText: 'Yorùbá Clarity', needsABackButton: false),
       body: const Center(
-        child: Text('Home Screen'),
+        child: Text('No diacritized Yorùbá text yet'),
       ),
       floatingActionButton: FloatingActionButton(
         heroTag: 'add-text',
         onPressed: () {},
-        tooltip: 'Diacritize a text',
+        tooltip: 'Diacritize a Yorùbá text',
         shape: const StadiumBorder(),
         backgroundColor: ColorPalette.kAccentColor,
         child: const Icon(Icons.add_outlined),

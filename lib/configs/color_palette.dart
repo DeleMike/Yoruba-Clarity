@@ -19,4 +19,6 @@ class ColorPalette {
   static const Color kRed = Color(0xFF960000);
   static const Color kGreen = Color(0xFF285D34);
   static const Color kTransparent = Colors.transparent;
+  static const Color kDeepTextColor = Color(0xFF334155);
+  static const Color kIconColor = Color(0xFF475569);
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yoruba_clarity/core/dashboard/home_screen.dart';
+import 'package:yoruba_clarity/core/onboarding/onboarding.dart';
 import 'package:yoruba_clarity/widgets/loading_screen.dart';
 
 class InitScreen extends StatefulWidget {
@@ -31,7 +32,7 @@ class _InitScreenState extends State<InitScreen> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(body: LoadingScreen());
         }
-        return const HomeScreen();
+        return const OnboardingScreen();
       },
     );
   }
