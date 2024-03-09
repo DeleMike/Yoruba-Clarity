@@ -10,18 +10,9 @@ import '../configs/dimensions.dart';
 /// displays component for chatting space
 class ChatBubble extends StatelessWidget {
   /// displays component for chatting space
-  ChatBubble({super.key});
+  const ChatBubble({super.key, required this.messages});
 
-  final messages = <Message>[
-    Message.fromJson({
-      'content': 'mo fe jeun',
-      'is_user': true,
-    }),
-    Message.fromJson({
-      'content': 'mo fẹ́ jẹun',
-      'is_user': false,
-    }),
-  ];
+  final List<Message> messages;
 
   @override
   Widget build(BuildContext context) {

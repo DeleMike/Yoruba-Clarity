@@ -67,14 +67,25 @@ class AppRouter {
         ),
       ),
       GoRoute(
+        name: resultScreen.substring(1),
         path: resultScreen,
-        builder: (BuildContext context, GoRouterState state) =>
-            const ResultScreen(),
-        pageBuilder: (context, state) => buildPageWithDefaultTransition<void>(
-          context: context,
-          state: state,
-          child: const ResultScreen(),
-        ),
+        builder: (BuildContext context, GoRouterState state) {
+          final arguments = state.extra as Map;
+
+          final messages = arguments['messages'];
+          return ResultScreen(messages: messages);
+        },
+        pageBuilder: (context, state) {
+          final arguments = state.extra as Map;
+
+          final messages = arguments['messages'];
+
+          return buildPageWithDefaultTransition<void>(
+            context: context,
+            state: state,
+            child: ResultScreen(messages: messages),
+          );
+        },
       ),
     ],
     debugLogDiagnostics: kDebugMode ? true : false,

@@ -8,9 +8,12 @@ import 'package:yoruba_clarity/widgets/yc_app_bar.dart';
 import '../../../../configs/dimensions.dart';
 import '../../../../widgets/a_chat_bubble.dart';
 import '../../../../widgets/loading_screen.dart';
+import '../model/message.dart';
 
 class ResultScreen extends StatelessWidget {
-  const ResultScreen({super.key});
+  const ResultScreen({super.key, required this.messages});
+
+  final List<Message> messages;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +31,7 @@ class ResultScreen extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(
                     left: kPaddingS, right: kPaddingS, bottom: kPaddingS),
-                child: ChatBubble(),
+                child: ChatBubble(messages: messages),
               ),
             ),
             const Divider(
