@@ -49,6 +49,8 @@ dependencies:
   flutter_speed_dial: ^7.0.0
   flexi_chip: ^1.0.8
   chips_choice: ^3.0.1
+  tutorial_coach_mark: ^1.2.11
+  shared_preferences: ^2.2.2
 
 dev_dependencies:
   flutter_test:

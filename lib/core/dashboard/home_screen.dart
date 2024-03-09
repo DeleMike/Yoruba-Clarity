@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:yoruba_clarity/configs/color_palette.dart';
 import 'package:yoruba_clarity/configs/constants.dart';
+import 'package:yoruba_clarity/core/dashboard/controllers/home_controller.dart';
 import 'package:yoruba_clarity/widgets/loading_screen.dart';
 import 'package:yoruba_clarity/widgets/yc_app_bar.dart';
 
@@ -22,8 +25,80 @@ import '../../configs/dimensions.dart';
 
 final texts = ['mo fẹ́ jẹun'];
 
-class HomeScreen extends StatelessWidget {
+final _addTextButton = GlobalKey();
+final _playAudioButton = GlobalKey();
+
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  void _createTutorial() {
+    final targets = [
+      TargetFocus(
+        identify: '_addTextButton',
+        keyTarget: _addTextButton,
+        alignSkip: Alignment.topCenter,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            builder: (context, controller) {
+              return Text(
+                  'Use this button to start applying diacritics undiacritised Yorùbá words',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(color: ColorPalette.kWhite));
+            },
+          ),
+        ],
+      ),
+      TargetFocus(
+        identify: '_playAudioButton',
+        keyTarget: _playAudioButton,
+        alignSkip: Alignment.bottomCenter,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (context, controller) {
+              return Text(
+                  'Use this button to start listening to the pronunciation of your saved diacritised Yorùbá words',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(color: ColorPalette.kWhite));
+            },
+          ),
+        ],
+      ),
+    ];
+
+    final tutorialMark = TutorialCoachMark(targets: targets);
+    Future.delayed(
+      const Duration(milliseconds: 500),
+      () {
+        tutorialMark.show(context: context);
+      },
+    );
+  }
+
+  void checkForTutorialStatus() async {
+    final homeController = ref.read(homeProvider);
+    final hasBeenCoached = await homeController.hasUserBeenCoachedForHomeScreen();
+    if (!hasBeenCoached) {
+      _createTutorial();
+      homeController.setUserHasBeenCoachedForHomeScreen();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    checkForTutorialStatus();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +133,7 @@ class HomeScreen extends StatelessWidget {
       //   child: Text('No diacritized Yorùbá text yet'),
       // ),
       floatingActionButton: FloatingActionButton(
+        key: _addTextButton,
         heroTag: 'add-text',
         onPressed: () {
           context.push(AppRouter.addDiacriticsScreen);
@@ -117,6 +193,7 @@ class _AText extends StatelessWidget {
                 border: Border.all(width: 0.6, color: ColorPalette.kBorderGrey),
               ),
               child: IconButton(
+                key: _playAudioButton,
                 onPressed: () {
                   showToast('Play Audio Message of converted text');
                   showDialog(
