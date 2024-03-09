@@ -1,8 +1,10 @@
 import 'package:chips_choice/chips_choice.dart';
 import 'package:flexi_chip/flexi_chip.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:yoruba_clarity/configs/color_palette.dart';
+import 'package:yoruba_clarity/core/dashboard/result/controllers/result_controller.dart';
 import 'package:yoruba_clarity/widgets/yc_app_bar.dart';
 
 import '../../../../configs/dimensions.dart';
@@ -10,13 +12,14 @@ import '../../../../widgets/a_chat_bubble.dart';
 import '../../../../widgets/loading_screen.dart';
 import '../model/message.dart';
 
-class ResultScreen extends StatelessWidget {
+class ResultScreen extends ConsumerWidget {
   const ResultScreen({super.key, required this.messages});
 
   final List<Message> messages;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final resultController = ref.watch(resultProvider);
     return Scaffold(
       appBar: const YCAppBar(
           headerText: 'Listen to Diacritized Text', needsABackButton: true),
@@ -42,8 +45,10 @@ class ResultScreen extends StatelessWidget {
               child: Text('Choose Label'),
             ),
             ChipsChoice<String>.multiple(
-              value: [],
-              onChanged: (val) {},
+              value: resultController.labels,
+              onChanged: (val) {
+                ref.read(resultProvider.notifier).setTagValue(val);
+              },
               choiceStyle: FlexiChipStyle.toned(
                 backgroundColor: ColorPalette.kDeepTextColor,
               ),
