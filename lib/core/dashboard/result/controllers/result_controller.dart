@@ -49,25 +49,29 @@ class ResultController with ChangeNotifier {
   }
 
   Future<void> playAudio(BuildContext context, String diacritizedWord) async {
-    final yorubaTTsUrl = dotenv.env['YORUBA_TTS'];
+    try {
+      final yorubaTTsUrl = dotenv.env['YORUBA_TTS'];
 
-    print('words to say: $diacritizedWord');
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (context) => const Center(
-        child: LoadingScreen(),
-      ),
-    );
-    final player = AudioPlayer(); // Create a player
-    final duration = await player.setUrl('$yorubaTTsUrl/$diacritizedWord');
-    if (context.mounted) {
-      context.pop();
+      print('words to say: $diacritizedWord');
+      showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (context) => const Center(
+          child: LoadingScreen(),
+        ),
+      );
+      final player = AudioPlayer(); // Create a player
+      final duration = await player.setUrl('$yorubaTTsUrl/$diacritizedWord');
+      if (context.mounted) {
+        context.pop();
+      }
+
+      await player.setSpeed(1.12); // Twice as fast
+      await player.play();
+      print('Duration took ${duration.toString()}');
+    } catch (e, s) {
+      print('An error occurred: $e, $s');
     }
-
-    await player.setSpeed(1.12); // Twice as fast
-    await player.play();
-    print('Duration took ${duration.toString()}');
   }
 
   Future<void> saveText(Message message, HomeController homeController) async {

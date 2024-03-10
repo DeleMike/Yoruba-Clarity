@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:yoruba_clarity/core/dashboard/diacritize/screens/add_diacritics.dart';
 import 'package:yoruba_clarity/core/dashboard/home_screen.dart';
 import 'package:yoruba_clarity/core/dashboard/result/screens/result_screen.dart';
+import 'package:yoruba_clarity/core/dashboard/view_screen.dart';
 import 'package:yoruba_clarity/core/onboarding/onboarding.dart';
 
 import '../core/init_screen.dart';
@@ -21,6 +22,8 @@ class AppRouter {
   static const addDiacriticsScreen = '/add-diacritics';
 
   static const resultScreen = '/result-screen';
+
+  static const viewScreen = '/view-screen';
 
   static final router = GoRouter(
     navigatorKey: navigatorKey,
@@ -84,6 +87,26 @@ class AppRouter {
             context: context,
             state: state,
             child: ResultScreen(messages: messages),
+          );
+        },
+      ),
+      GoRoute(
+        name: viewScreen.substring(1),
+        path: viewScreen,
+        builder: (BuildContext context, GoRouterState state) {
+          final arguments = state.extra as Map;
+
+          final yorText = arguments['flashcard'];
+          return ViewScreen(flashcard: yorText);
+        },
+        pageBuilder: (context, state) {
+          final arguments = state.extra as Map;
+
+          final yorText = arguments['flashcard'];
+          return buildPageWithDefaultTransition<void>(
+            context: context,
+            state: state,
+            child: ViewScreen(flashcard: yorText),
           );
         },
       ),

@@ -134,10 +134,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   Flashcard flashcard = lists[index];
 
                   return InkWell(
-                    onTap: (() {
-                      printOut(
-                          'Position ${texts[index]} clicked = ${flashcard.toString()}');
-                    }),
+                    onTap: () {
+                      final args = {'flashcard': flashcard};
+                      if (context.mounted) {
+                        context.pushNamed(
+                          AppRouter.viewScreen.substring(1),
+                          extra: args,
+                        );
+                      }
+                    },
                     child: _AText(
                         name: flashcard.content,
                         key_: index == 0 ? _playAudioButton : keyList[index]),
@@ -215,7 +220,7 @@ class _AText extends ConsumerWidget {
               ),
               child: IconButton(
                 // key: key_,
-                onPressed: () async{
+                onPressed: () async {
                   showToast('Play Audio Message of converted text');
                   print('Text is = $name');
                   await ref.read(homeProvider).playAudio(context, name);
