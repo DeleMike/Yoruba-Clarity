@@ -52,16 +52,7 @@ class HomeController with ChangeNotifier {
       BuildContext context, Flashcard flashcard, int index) async {
     flashcardBox = await Hive.openBox<Flashcard>('flashcardBox');
 
-    for (var key in flashcardBox.keys) {
-      print(key);
-    }
-
-     for (var value in flashcardBox.values) {
-      print(value);
-    }
-
     printOut('Exisiting flashs = ${flashcardBox.length - 1}');
-    print('Wants to delete? $index');
     await flashcardBox.deleteAt(index);
 
     printOut('New Exisiting flashs = ${flashcardBox.length}');
