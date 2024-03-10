@@ -3,13 +3,18 @@ import 'package:flexi_chip/flexi_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:go_router/go_router.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:yoruba_clarity/configs/color_palette.dart';
+import 'package:yoruba_clarity/core/dashboard/controllers/home_controller.dart';
 import 'package:yoruba_clarity/core/dashboard/result/controllers/result_controller.dart';
 import 'package:yoruba_clarity/widgets/yc_app_bar.dart';
 
+import '../../../../boxes.dart';
 import '../../../../configs/dimensions.dart';
 import '../../../../widgets/a_chat_bubble.dart';
 import '../../../../widgets/loading_screen.dart';
+import '../../../local/flashcard.dart';
 import '../model/message.dart';
 
 class ResultScreen extends ConsumerWidget {
@@ -67,13 +72,19 @@ class ResultScreen extends ConsumerWidget {
         animatedIcon: AnimatedIcons.menu_close,
         children: [
           SpeedDialChild(
-            onTap: () {
+            onTap: () async {
               showDialog(
                 context: context,
                 barrierDismissible: true,
                 builder: (context) => const Center(
                   child: LoadingScreen(),
                 ),
+              );
+              await ref.read(resultProvider).saveText(messages[1], ref.read(homeProvider)).then(
+                (value) async {
+                  context.pop(); // remove dialog
+                  context.pop(); // remove results
+                },
               );
             },
             label: 'Save Word',

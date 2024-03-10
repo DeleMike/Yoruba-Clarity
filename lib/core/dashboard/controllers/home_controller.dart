@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:yoruba_clarity/boxes.dart';
 
 import '../../../configs/constants.dart';
 import '../../../configs/debug_fns.dart';
+import '../../local/flashcard.dart';
 
 const homeTutorialKey = 'home_tutor';
 const resultTutorialKey = 'result_tutor';
@@ -29,19 +32,15 @@ class HomeController with ChangeNotifier {
     return userBeenCoached;
   }
 
-  Future<void> setUserHasBeenCoachedForResultScreen() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(resultTutorialKey, true);
+  List<Flashcard> myFlashs = [];
 
-    printOut('User has been tutored!');
-    showToast('User has been tutored!');
-  }
-
-  Future<bool> hasUserBeenCoachedForResultScreen() async {
-    bool userBeenCoached = false;
-    final prefs = await SharedPreferences.getInstance();
-    userBeenCoached = await prefs.setBool(resultTutorialKey, true);
-
-    return userBeenCoached;
+  Future<void> getExistingFlashcards() async {
+    flashcardBox = await Hive.openBox<Flashcard>('flashcardBox');
+    myFlashs = flashcardBox.values
+        .toList()
+        .map((e) => Flashcard(content: e.content, labels: e.labels))
+        .toList();
+    print('Exisiting flashs from Home = ${myFlashs.length}');
+    notifyListeners();
   }
 }

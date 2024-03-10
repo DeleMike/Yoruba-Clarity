@@ -89,31 +89,10 @@ class _AddDiacriticsState extends ConsumerState<AddDiacritics> {
                         ),
                       ),
                       onPressed: () async {
-                        final result =
-                            await addDiacriticsController.applyDiacritics(
+                        await addDiacriticsController.applyDiacritics(
                           context: context,
                           formKey: _formKey,
                         );
-                        printOut('Result after diacritics = $result');
-                        List<Message> messages = <Message>[
-                          Message.fromJson({
-                            'content': addDiacriticsController.formData['text']
-                                .toString()
-                                .trim(),
-                            'is_user': true,
-                          }),
-                          Message.fromJson({
-                            'content': result,
-                            'is_user': false,
-                          }),
-                        ];
-                        final args = {'messages': messages};
-                        if (context.mounted) {
-                          context.pushNamed(
-                            AppRouter.resultScreen.substring(1),
-                            extra: args,
-                          );
-                        }
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(12.0),

@@ -3,12 +3,15 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:yoruba_clarity/widgets/loading_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:yoruba_clarity/network/http_client.dart' as client;
 
+import '../../../../configs/app_router.dart';
 import '../../../../configs/constants.dart';
 import '../../../../configs/debug_fns.dart';
+import '../../result/model/message.dart';
 
 final addDiacriticsProvider =
     ChangeNotifierProvider.autoDispose<AddDiacriticsController>((ref) {
@@ -20,7 +23,7 @@ final addDiacriticsProvider =
 class AddDiacriticsController with ChangeNotifier {
   final formData = {};
 
-  Future<String> applyDiacritics({
+  Future<void> applyDiacritics({
     required BuildContext context,
     required GlobalKey<FormState> formKey,
   }) async {
@@ -47,11 +50,29 @@ class AddDiacriticsController with ChangeNotifier {
           printOut('There\'s an output');
           printOut('Result is = ${jsonDecode(response.body)['result']}}');
           result = jsonDecode(response.body)['result'];
+          printOut('Result after diacritics = $result');
+          List<Message> messages = <Message>[
+            Message.fromJson({
+              'content': formData['text'].toString().trim(),
+              'is_user': true,
+            }),
+            Message.fromJson({
+              'content': result,
+              'is_user': false,
+            }),
+          ];
+          final args = {'messages': messages};
+          if (context.mounted) {
+            context.pushReplacementNamed(
+              AppRouter.resultScreen.substring(1),
+              extra: args,
+            );
+          }
         } else if (response.statusCode == 502) {
           // showToast('Restarting because of bad gateway');
           printOut('Restarting because of bad gateway...');
           if (context.mounted) {
-            result = await applyDiacritics(context: context, formKey: formKey);
+            await applyDiacritics(context: context, formKey: formKey);
           }
         } else {
           showToast('Something went wrong');
@@ -66,7 +87,5 @@ class AddDiacriticsController with ChangeNotifier {
     } else {
       printOut('Not valid');
     }
-
-    return result;
   }
 }

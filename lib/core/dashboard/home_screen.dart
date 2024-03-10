@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
+import 'package:yoruba_clarity/boxes.dart';
 import 'package:yoruba_clarity/configs/color_palette.dart';
 import 'package:yoruba_clarity/configs/constants.dart';
+import 'package:yoruba_clarity/configs/debug_fns.dart';
 import 'package:yoruba_clarity/core/dashboard/controllers/home_controller.dart';
+import 'package:yoruba_clarity/core/dashboard/result/controllers/result_controller.dart';
+import 'package:yoruba_clarity/core/local/flashcard.dart';
 import 'package:yoruba_clarity/widgets/loading_screen.dart';
 import 'package:yoruba_clarity/widgets/yc_app_bar.dart';
 
@@ -56,24 +60,25 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
         ],
       ),
-      TargetFocus(
-        identify: '_playAudioButton',
-        keyTarget: _playAudioButton,
-        alignSkip: Alignment.bottomCenter,
-        contents: [
-          TargetContent(
-            align: ContentAlign.bottom,
-            builder: (context, controller) {
-              return Text(
-                  'Use this button to start listening to the pronunciation of your saved diacritised Yorùbá words',
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyMedium!
-                      .copyWith(color: ColorPalette.kWhite));
-            },
-          ),
-        ],
-      ),
+      // if (flashcardBox.isNotEmpty)
+      //   TargetFocus(
+      //     identify: '_playAudioButton',
+      //     keyTarget: _playAudioButton,
+      //     alignSkip: Alignment.bottomCenter,
+      //     contents: [
+      //       TargetContent(
+      //         align: ContentAlign.bottom,
+      //         builder: (context, controller) {
+      //           return Text(
+      //               'Use this button to start listening to the pronunciation of your saved diacritised Yorùbá words',
+      //               style: Theme.of(context)
+      //                   .textTheme
+      //                   .bodyMedium!
+      //                   .copyWith(color: ColorPalette.kWhite));
+      //         },
+      //       ),
+      //     ],
+      //   ),
     ];
 
     final tutorialMark = TutorialCoachMark(targets: targets);
@@ -87,11 +92,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   void checkForTutorialStatus() async {
     final homeController = ref.read(homeProvider);
-    final hasBeenCoached = await homeController.hasUserBeenCoachedForHomeScreen();
+    final hasBeenCoached =
+        await homeController.hasUserBeenCoachedForHomeScreen();
     if (!hasBeenCoached) {
       _createTutorial();
       homeController.setUserHasBeenCoachedForHomeScreen();
     }
+
+    await homeController.getExistingFlashcards();
   }
 
   @override
@@ -102,10 +110,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final List<GlobalObjectKey<FormState>> keyList = List.generate(
+        flashcardBox.length, (index) => GlobalObjectKey<FormState>(index));
+    final flashs = ref.watch(homeProvider).myFlashs;
     return Scaffold(
-      appBar: const YCAppBar(
-          headerText: 'Your Saved Cards', needsABackButton: false),
-      body: texts.isEmpty
+      appBar: YCAppBar(
+          headerText: 'Your Saved Cards: ${flashs.length}',
+          needsABackButton: false),
+      body: flashcardBox.isEmpty
           ? const Center(
               child: Text('No cards saved yet'),
             )
@@ -113,15 +125,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               padding: const EdgeInsets.only(
                   left: kPaddingM, top: kPaddingM, right: kPaddingM),
               child: GridView.builder(
-                itemCount: texts.length,
+                itemCount: flashs.length,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                 ),
                 itemBuilder: (ctx, index) {
-                  // ignore: avoid_print
+                  final lists = flashs.reversed.toList();
+                  Flashcard flashcard = lists[index];
+
                   return InkWell(
-                    onTap: (() => print('Position ${texts[index]} clicked')),
-                    child: _AText(name: texts[index]),
+                    onTap: (() {
+                      printOut(
+                          'Position ${texts[index]} clicked = ${flashcard.toString()}');
+                    }),
+                    child: _AText(
+                        name: flashcard.content,
+                        key_: index == 0 ? _playAudioButton : keyList[index]),
                   );
                 },
                 // primary: false,
@@ -150,9 +169,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 class _AText extends StatelessWidget {
   const _AText({
     required this.name,
+    required this.key_,
   });
 
   final String name;
+  final GlobalKey<State<StatefulWidget>> key_;
 
   @override
   Widget build(BuildContext context) {
@@ -193,7 +214,7 @@ class _AText extends StatelessWidget {
                 border: Border.all(width: 0.6, color: ColorPalette.kBorderGrey),
               ),
               child: IconButton(
-                key: _playAudioButton,
+                // key: key_,
                 onPressed: () {
                   showToast('Play Audio Message of converted text');
                   showDialog(
