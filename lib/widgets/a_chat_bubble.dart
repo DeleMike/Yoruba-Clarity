@@ -36,36 +36,39 @@ class ChatBubble extends StatelessWidget {
                 height: 20,
                 child: Image.asset(AssetsImages.botImage),
               ),
-            Bubble(
-              nipWidth: kPaddingS,
-              nipHeight: kPaddingS - 4,
-              nip:
-                  message.isUser ? BubbleNip.rightBottom : BubbleNip.leftBottom,
-              color: message.isUser
-                  ? ColorPalette.kLightPrimaryColor
-                  : ColorPalette.kPrimaryColor,
-              elevation: 8,
-              child: Padding(
-                padding: const EdgeInsets.all(kPaddingS),
-                child: Theme(
-                  data: ThemeData(
-                    textSelectionTheme: TextSelectionThemeData(
-                      selectionColor:
-                          message.isUser ? null : ColorPalette.kAccentColor,
-                      selectionHandleColor: message.isUser
-                          ? ColorPalette.kRed
-                          : ColorPalette.kAccentColor,
+            Flexible(
+              child: Bubble(
+                nipWidth: kPaddingS,
+                nipHeight: kPaddingS - 4,
+                nip:
+                    message.isUser ? BubbleNip.rightBottom : BubbleNip.leftBottom,
+                color: message.isUser
+                    ? ColorPalette.kLightPrimaryColor
+                    : ColorPalette.kPrimaryColor,
+                elevation: 8,
+                child: Padding(
+                  padding: const EdgeInsets.all(kPaddingS),
+                  child: Theme(
+                    data: ThemeData(
+                      textSelectionTheme: TextSelectionThemeData(
+                        selectionColor:
+                            message.isUser ? null : ColorPalette.kAccentColor,
+                        selectionHandleColor: message.isUser
+                            ? ColorPalette.kRed
+                            : ColorPalette.kAccentColor,
+                      ),
                     ),
-                  ),
-                  child: SelectableText(
-                    message.content,
-                    style: message.isUser
-                        ? Theme.of(context).textTheme.bodyMedium
-                        : Theme.of(context)
-                            .textTheme
-                            .bodyMedium!
-                            .copyWith(color: ColorPalette.kWhite, fontSize: 18),
-                    scrollPhysics: const ClampingScrollPhysics(),
+                    child: SelectableText(
+                      message.content,
+                      maxLines: null,
+                      style: message.isUser
+                          ? Theme.of(context).textTheme.bodyMedium
+                          : Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .copyWith(color: ColorPalette.kWhite, fontSize: 18),
+                      scrollPhysics: const ClampingScrollPhysics(),
+                    ),
                   ),
                 ),
               ),

@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hive/hive.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:yoruba_clarity/boxes.dart';
 import 'package:yoruba_clarity/core/dashboard/controllers/home_controller.dart';
 import 'package:yoruba_clarity/core/local/flashcard.dart';
 import 'package:yoruba_clarity/core/local/label.dart';
 
 import '../../../../configs/debug_fns.dart';
+import '../../../../widgets/loading_screen.dart';
 import '../model/message.dart';
 
 final resultProvider = ChangeNotifierProvider.autoDispose<ResultController>(
@@ -42,6 +46,28 @@ class ResultController with ChangeNotifier {
 
     await getExistingLabels();
     notifyListeners();
+  }
+
+  Future<void> playAudio(BuildContext context, String diacritizedWord) async {
+    final yorubaTTsUrl = dotenv.env['YORUBA_TTS'];
+
+    print('words to say: $diacritizedWord');
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) => const Center(
+        child: LoadingScreen(),
+      ),
+    );
+    final player = AudioPlayer(); // Create a player
+    final duration = await player.setUrl('$yorubaTTsUrl/$diacritizedWord');
+    if (context.mounted) {
+      context.pop();
+    }
+
+    await player.setSpeed(1.12); // Twice as fast
+    await player.play();
+    print('Duration took ${duration.toString()}');
   }
 
   Future<void> saveText(Message message, HomeController homeController) async {

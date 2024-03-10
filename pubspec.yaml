@@ -55,6 +55,8 @@ dependencies:
   http: ^1.2.1
   hive: ^2.2.3
   path_provider: ^2.1.2
+  just_audio: ^0.9.36
+  flutter_dotenv: ^5.1.0
   
 
 dev_dependencies:
@@ -89,6 +91,7 @@ flutter:
   uses-material-design: true
 
   assets:
+    - .env
     - assets/images/
     - assets/animations/
     - assets/launcher/

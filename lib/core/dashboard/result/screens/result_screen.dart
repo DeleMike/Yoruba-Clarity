@@ -112,14 +112,10 @@ class ResultScreen extends ConsumerWidget {
                 color: ColorPalette.kPrimaryColor),
           ),
           SpeedDialChild(
-            onTap: () {
-              showDialog(
-                context: context,
-                barrierDismissible: true,
-                builder: (context) => const Center(
-                  child: LoadingScreen(),
-                ),
-              );
+            onTap: () async {
+              
+              await ref.read(resultProvider).playAudio(context, messages[1].content);
+
             },
             label: 'Listen',
             child: const Icon(Icons.play_arrow_rounded,
