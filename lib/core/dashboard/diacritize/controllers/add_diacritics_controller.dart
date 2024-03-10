@@ -63,7 +63,7 @@ class AddDiacriticsController with ChangeNotifier {
           ];
           final args = {'messages': messages};
           if (context.mounted) {
-            context.pushReplacementNamed(
+            context.pushNamed(
               AppRouter.resultScreen.substring(1),
               extra: args,
             );

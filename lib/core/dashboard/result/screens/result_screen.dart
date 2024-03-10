@@ -4,17 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:yoruba_clarity/configs/color_palette.dart';
+import 'package:yoruba_clarity/configs/debug_fns.dart';
 import 'package:yoruba_clarity/core/dashboard/controllers/home_controller.dart';
 import 'package:yoruba_clarity/core/dashboard/result/controllers/result_controller.dart';
 import 'package:yoruba_clarity/widgets/yc_app_bar.dart';
 
-import '../../../../boxes.dart';
+import '../../../../configs/constants.dart';
 import '../../../../configs/dimensions.dart';
 import '../../../../widgets/a_chat_bubble.dart';
 import '../../../../widgets/loading_screen.dart';
-import '../../../local/flashcard.dart';
 import '../../../local/label.dart';
 import '../model/message.dart';
 
@@ -33,7 +32,6 @@ class ResultScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final resultController = ref.watch(resultProvider);
     final labelsRef = ref.watch(labelsFutureProvider);
-    final labels = ref.watch(resultProvider).labels;
     return Scaffold(
       appBar: const YCAppBar(
           headerText: 'Listen to Diacritized Text', needsABackButton: true),
@@ -77,7 +75,7 @@ class ResultScreen extends ConsumerWidget {
                 ),
               );
             }, error: (error, s) {
-              print('Error: $error, $s');
+              printOut('Error: $error, $s');
               return Container();
             }, loading: () {
               return const LoadingScreen();
@@ -104,6 +102,8 @@ class ResultScreen extends ConsumerWidget {
                 (value) async {
                   context.pop(); // remove dialog
                   context.pop(); // remove results
+                  context.pop(); // remove add diacritics
+
                 },
               );
             },
@@ -113,9 +113,12 @@ class ResultScreen extends ConsumerWidget {
           ),
           SpeedDialChild(
             onTap: () async {
-              
-              await ref.read(resultProvider).playAudio(context, messages[1].content);
+              showToast('Play Audio Message of converted text',
+                  textShouldBeInProd: true);
 
+              await ref
+                  .read(resultProvider)
+                  .playAudio(context, messages[1].content);
             },
             label: 'Listen',
             child: const Icon(Icons.play_arrow_rounded,
@@ -142,14 +145,14 @@ class ResultScreen extends ConsumerWidget {
 }
 
 class _AddLabel extends ConsumerWidget {
-  const _AddLabel({super.key});
+  const _AddLabel();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     TextEditingController labelController = TextEditingController();
 
     return Container(
-      padding: EdgeInsets.all(20.0),
+      padding: const EdgeInsets.all(20.0),
       height: kScreenHeight(context) * 0.4,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -185,7 +188,7 @@ class _AddLabel extends ConsumerWidget {
               onPressed: () async {
                 // Get the label text from the text field
                 String labelText = labelController.text;
-                print('Label Text: $labelText');
+                printOut('Label Text: $labelText');
                 ref.read(resultProvider).saveLabel(labelText.trim());
 
                 // Close the bottom sheet

@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:yoruba_clarity/core/local/flashcard.dart';
 import 'package:yoruba_clarity/widgets/yc_app_bar.dart';
 
 import '../../configs/color_palette.dart';
 import '../../configs/constants.dart';
+import '../../configs/debug_fns.dart';
 import '../../configs/dimensions.dart';
 import '../../widgets/confirmation_dialog.dart';
 import 'controllers/home_controller.dart';
 
 class ViewScreen extends ConsumerWidget {
-  const ViewScreen({super.key, required this.flashcard});
+  const ViewScreen(
+      {super.key, required this.flashcard, required this.cardIndex});
 
   final Flashcard flashcard;
+  final int cardIndex;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final homeController = ref.read(homeProvider);
     return Scaffold(
       appBar: const YCAppBar(
         headerText: 'View Yorùbá Text',
@@ -70,8 +71,9 @@ class ViewScreen extends ConsumerWidget {
                           child: IconButton(
                             // key: key_,
                             onPressed: () async {
-                              showToast('Play Audio Message of converted text');
-                              print('Text is = ${flashcard.content}');
+                              showToast('Play Audio Message of converted text',
+                                  textShouldBeInProd: true);
+                              printOut('Text is = ${flashcard.content}');
                               await ref
                                   .read(homeProvider)
                                   .playAudio(context, flashcard.content);
@@ -98,12 +100,14 @@ class ViewScreen extends ConsumerWidget {
                                   'Do you really want to delete is card?');
 
                               if (willDelete) {
-                                print('user will delete');
-                                await ref.read(homeProvider).deleteText(context, flashcard);
+                                printOut('user will delete');
+                                if (context.mounted) {
+                                  await ref.read(homeProvider).deleteText(
+                                      context, flashcard, cardIndex);
+                                }
                               } else {
-                                print('user does not want to delete');
+                                printOut('user does not want to delete');
                               }
-
                             },
                             icon: const Icon(Icons.delete_forever),
                           ),

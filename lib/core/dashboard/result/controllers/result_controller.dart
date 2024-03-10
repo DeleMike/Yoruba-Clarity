@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hive/hive.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:yoruba_clarity/boxes.dart';
+import 'package:yoruba_clarity/configs/constants.dart';
 import 'package:yoruba_clarity/core/dashboard/controllers/home_controller.dart';
 import 'package:yoruba_clarity/core/local/flashcard.dart';
 import 'package:yoruba_clarity/core/local/label.dart';
@@ -28,7 +29,7 @@ class ResultController with ChangeNotifier {
     _existingLabels =
         labelBox.values.toList().map((e) => Label(name: e.name)).toList();
 
-    print('Exisiting flashs from Home = ${_existingLabels.length}');
+    printOut('Exisiting flashs from Home = ${_existingLabels.length}');
     return _existingLabels;
   }
 
@@ -52,7 +53,7 @@ class ResultController with ChangeNotifier {
     try {
       final yorubaTTsUrl = dotenv.env['YORUBA_TTS'];
 
-      print('words to say: $diacritizedWord');
+      printOut('words to say: $diacritizedWord');
       showDialog(
         context: context,
         barrierDismissible: true,
@@ -68,9 +69,13 @@ class ResultController with ChangeNotifier {
 
       await player.setSpeed(1.12); // Twice as fast
       await player.play();
-      print('Duration took ${duration.toString()}');
+      printOut('Duration took ${duration.toString()}');
     } catch (e, s) {
-      print('An error occurred: $e, $s');
+      if (context.mounted) {
+        context.pop();
+      }
+      SnackBarService.showSnackBar(content: 'We could not play audio for this particular diacritized text');
+      printOut('An error occurred: $e, $s');
     }
   }
 
@@ -80,7 +85,7 @@ class ResultController with ChangeNotifier {
     printOut('Exisiting flashs = ${flashcardBox.length}');
 
     final flashcard = Flashcard(content: message.content, labels: _labels);
-    print('Flashcard to save is: $flashcard');
+    printOut('Flashcard to save is: $flashcard');
     await flashcardBox.put('${flashcardBox.length}', flashcard);
 
     printOut('New Exisiting flashs = ${flashcardBox.length}');

@@ -44,15 +44,25 @@ class HomeController with ChangeNotifier {
         .toList()
         .map((e) => Flashcard(content: e.content, labels: e.labels))
         .toList();
-    print('Exisiting flashs from Home = ${myFlashs.length}');
+    printOut('Exisiting flashs from Home = ${myFlashs.length}');
     notifyListeners();
   }
 
-  Future<void> deleteText(BuildContext context, Flashcard flashcard) async {
+  Future<void> deleteText(
+      BuildContext context, Flashcard flashcard, int index) async {
     flashcardBox = await Hive.openBox<Flashcard>('flashcardBox');
 
+    for (var key in flashcardBox.keys) {
+      print(key);
+    }
+
+     for (var value in flashcardBox.values) {
+      print(value);
+    }
+
     printOut('Exisiting flashs = ${flashcardBox.length - 1}');
-    await flashcardBox.delete('${flashcardBox.length - 1}');
+    print('Wants to delete? $index');
+    await flashcardBox.deleteAt(index);
 
     printOut('New Exisiting flashs = ${flashcardBox.length}');
     await getExistingFlashcards().then((value) => context.pop());
@@ -63,7 +73,7 @@ class HomeController with ChangeNotifier {
     try {
       final yorubaTTsUrl = dotenv.env['YORUBA_TTS'];
 
-      print('words to say: $diacritizedWord');
+      printOut('words to say: $diacritizedWord');
       showDialog(
         context: context,
         barrierDismissible: true,
@@ -79,10 +89,12 @@ class HomeController with ChangeNotifier {
 
       await player.setSpeed(1.12); // Twice as fast
       await player.play();
-      print('Duration took ${duration.toString()}');
+      printOut('Duration took ${duration.toString()}');
     } catch (e, s) {
-      context.pop();
-      print('Error: $e, $s');
+      if (context.mounted) {
+        context.pop();
+      }
+      printOut('Error: $e, $s');
     }
   }
 }

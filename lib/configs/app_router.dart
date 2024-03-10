@@ -97,16 +97,19 @@ class AppRouter {
           final arguments = state.extra as Map;
 
           final yorText = arguments['flashcard'];
-          return ViewScreen(flashcard: yorText);
+          final index = arguments['index'];
+          return ViewScreen(flashcard: yorText, cardIndex: index);
         },
         pageBuilder: (context, state) {
           final arguments = state.extra as Map;
 
           final yorText = arguments['flashcard'];
+          final index = arguments['index'];
+
           return buildPageWithDefaultTransition<void>(
             context: context,
             state: state,
-            child: ViewScreen(flashcard: yorText),
+            child: ViewScreen(flashcard: yorText, cardIndex: index),
           );
         },
       ),

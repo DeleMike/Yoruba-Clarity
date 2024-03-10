@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:yoruba_clarity/configs/app_router.dart';
+
 import 'package:yoruba_clarity/widgets/yc_app_bar.dart';
 
 import '../../../../configs/color_palette.dart';
 import '../../../../configs/debug_fns.dart';
 import '../../../../configs/dimensions.dart';
-import '../../result/model/message.dart';
 import '../controllers/add_diacritics_controller.dart';
 
 class AddDiacritics extends ConsumerStatefulWidget {
@@ -40,7 +38,7 @@ class _AddDiacriticsState extends ConsumerState<AddDiacritics> {
                   keyboardType: TextInputType.text,
                   minLines: 1,
                   maxLines: 10,
-                  style: const TextStyle(fontSize: 12),
+                  style: const TextStyle(fontSize: 18),
                   decoration: InputDecoration(
                     labelText: 'Enter Yorùbá phrase/sentence?',
                     labelStyle: Theme.of(context)

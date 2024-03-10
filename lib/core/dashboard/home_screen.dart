@@ -5,14 +5,12 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:yoruba_clarity/boxes.dart';
 import 'package:yoruba_clarity/configs/color_palette.dart';
 import 'package:yoruba_clarity/configs/constants.dart';
-import 'package:yoruba_clarity/configs/debug_fns.dart';
 import 'package:yoruba_clarity/core/dashboard/controllers/home_controller.dart';
-import 'package:yoruba_clarity/core/dashboard/result/controllers/result_controller.dart';
 import 'package:yoruba_clarity/core/local/flashcard.dart';
-import 'package:yoruba_clarity/widgets/loading_screen.dart';
 import 'package:yoruba_clarity/widgets/yc_app_bar.dart';
 
 import '../../configs/app_router.dart';
+import '../../configs/debug_fns.dart';
 import '../../configs/dimensions.dart';
 
 // final texts = [
@@ -126,16 +124,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   left: kPaddingM, top: kPaddingM, right: kPaddingM),
               child: GridView.builder(
                 itemCount: flashs.length,
+                
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                 ),
                 itemBuilder: (ctx, index) {
-                  final lists = flashs.reversed.toList();
+                  final lists = flashs.toList();
                   Flashcard flashcard = lists[index];
 
                   return InkWell(
                     onTap: () {
-                      final args = {'flashcard': flashcard};
+                      final args = {'flashcard': flashcard, 'index':index};
                       if (context.mounted) {
                         context.pushNamed(
                           AppRouter.viewScreen.substring(1),
@@ -221,8 +220,8 @@ class _AText extends ConsumerWidget {
               child: IconButton(
                 // key: key_,
                 onPressed: () async {
-                  showToast('Play Audio Message of converted text');
-                  print('Text is = $name');
+                  showToast('Play Audio Message of converted text', textShouldBeInProd: true);
+                  printOut('Text is = $name');
                   await ref.read(homeProvider).playAudio(context, name);
                 },
                 icon: const Icon(Icons.play_arrow_rounded),
