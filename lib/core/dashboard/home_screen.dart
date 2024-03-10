@@ -166,7 +166,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 }
 
-class _AText extends StatelessWidget {
+class _AText extends ConsumerWidget {
   const _AText({
     required this.name,
     required this.key_,
@@ -176,7 +176,7 @@ class _AText extends StatelessWidget {
   final GlobalKey<State<StatefulWidget>> key_;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       margin: const EdgeInsets.all(8),
       padding: const EdgeInsets.all(12.0),
@@ -215,15 +215,10 @@ class _AText extends StatelessWidget {
               ),
               child: IconButton(
                 // key: key_,
-                onPressed: () {
+                onPressed: () async{
                   showToast('Play Audio Message of converted text');
-                  showDialog(
-                    context: context,
-                    barrierDismissible: true,
-                    builder: (context) => const Center(
-                      child: LoadingScreen(),
-                    ),
-                  );
+                  print('Text is = $name');
+                  await ref.read(homeProvider).playAudio(context, name);
                 },
                 icon: const Icon(Icons.play_arrow_rounded),
               ),
